@@ -11,8 +11,7 @@ const Todo = () => {
   const router = useRouter();
   const isSingedIn = useSelector((state: RootState) => state.auth.isSignedIn);
   const [showModal, setShowModal] = useState(false);
-
-  
+  console.log(showModal);
 
   // redirect user to signin if not signed in
   useEffect(() => {
@@ -20,9 +19,9 @@ const Todo = () => {
   }, [router, isSingedIn]);
 
   return (
-    <main className="max-w-7xl mx-auto text-center bg-white pt-6">
-      <h1 className="mb-6 font-extrabold text-4xl">TODO LIST</h1>
-      <TodoHeader />
+    <main className="mx-auto max-w-7xl bg-white pt-6 text-center">
+      <h1 className="mb-6 text-4xl font-extrabold">TODO LIST</h1>
+      <TodoHeader setShowModal={setShowModal} />
       <Modal showModal={showModal} setShowModal={setShowModal} />
       <section></section>
     </main>

@@ -1,5 +1,4 @@
 "use client";
-import Button from "@/components/Button";
 import { RootState } from "@/lib/store";
 import { useRouter } from "next/navigation";
 import { MouseEvent, useEffect, useState } from "react";
@@ -22,9 +21,8 @@ export default function Home() {
     e.preventDefault();
     setPending(true);
     try {
-      await signInWithPopup(auth, provider);
-      router.replace("/todo");
-      dispatch(login());
+      await new Promise((resolve) => setTimeout(resolve, 4000));
+      // dispatch(login());
     } catch (error) {
       alert(error);
     } finally {
@@ -33,19 +31,13 @@ export default function Home() {
   };
 
   return (
-    <>
-      {isSignedIn ? router.push("/todo") : ""}
-      <main className=" mx-auto min-h-screen max-w-screen-2xl pt-6 text-center">
-        <div className="mx-auto max-w-96">
-          <Button
-            handleClick={handleSignIn}
-            pending={pending}
-            label="Sign In"
-            type="button"
-            style="btn-neutral"
-          />
-        </div>
-      </main>
-    </>
+    <main className=" mx-auto min-h-screen max-w-screen-2xl pt-6 text-center">
+      <div className="mx-auto max-w-96">
+        <button className={`btn btn-neutral text-lg`} onClick={handleSignIn}>
+          Sign In
+          {pending ? <span className="loading loading-spinner"></span> : ""}
+        </button>
+      </div>
+    </main>
   );
 }

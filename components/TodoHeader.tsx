@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 
-const TodoHeader = () => {
+interface Props {
+  setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
+}
+const TodoHeader = ({ setShowModal }: Props) => {
   const [filterValue, setFilterValue] = useState("");
-  const openModal = () => {};
 
   return (
     <div className="mx-auto flex max-w-3xl items-center justify-between bg-white px-5">
-      <button className="btn btn-neutral" onClick={openModal}>
+      <button className="btn btn-neutral" onClick={() => setShowModal(true)}>
         Add Task
       </button>
       <select
-        className=" text-black rounded-lg border-2 border-gray-500 bg-white px-2 py-3 font-medium outline-none"
+        className=" rounded-lg border-2 border-gray-500 bg-white px-2 py-3 font-medium text-black outline-none"
         value={filterValue}
         onChange={(e) => setFilterValue(e.target.value)}
       >
