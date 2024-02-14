@@ -1,27 +1,25 @@
 "use client";
-import { auth, provider } from "@/config/firebase";
-import { login } from "@/lib/features/auth/authSlice";
-import { signInWithPopup } from "firebase/auth";
-import { useRouter } from "next/navigation";
-import { useDispatch } from "react-redux";
-const Button = () => {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const handleSignIn = () => {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log(result.user);
-        // TODO: Add user to the store
-        dispatch(login());
-        router.push("/todo");
-      })
-      .catch((error) => alert(error.message));
-  };
+import { MouseEvent } from "react";
+
+interface Props {
+  handleClick?: (e?: MouseEvent<HTMLButtonElement>) => void;
+  handleModal?:  () => void;
+  pending?: boolean;
+  label: string;
+  style: string;
+  type: "submit" | "button" | "reset";
+}
+
+const Button = ({ handleClick, pending, label, type, style }: Props) => {
   return (
     <>
-      {}
-      <button className="btn btn-neutral text-xl" onClick={handleSignIn}>
-        Sign In
+      <button
+        className={`btn text-lg  ${style}`}
+        type={type}
+        onClick={handleClick}
+      >
+        {label}
+        {pending ? <span className="loading loading-spinner"></span> : ""}
       </button>
     </>
   );

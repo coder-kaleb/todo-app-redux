@@ -6,6 +6,13 @@ const config: Config = {
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  theme: {
+    extend: {
+      backgroundColor: {
+        "semi-transparent": "rgba(0, 0, 0, 0.5)",
+      },
+    },
+  },
 
   plugins: [require("daisyui")],
 };
