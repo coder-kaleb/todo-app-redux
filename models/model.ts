@@ -3,7 +3,7 @@ import { Schema, model, models } from "mongoose";
 const todoSchema = new Schema(
   {
     title: String,
-    status: String,
+    isCompleted: Boolean,
   },
   {
     timestamps: true,

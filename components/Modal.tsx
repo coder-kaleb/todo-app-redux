@@ -1,4 +1,5 @@
-import { addTodo } from "@/lib/features/todo/todoSlice";
+import { postTodo } from "@/lib/features/todo/todoSlice";
+import { AppDispatch } from "@/lib/store";
 import React, { useState } from "react";
 import { CgClose } from "react-icons/cg";
 import { useDispatch } from "react-redux";
@@ -12,14 +13,16 @@ const Modal = ({ showModal, setShowModal }: Props) => {
     "incompleted",
   );
   const [todo, setTodo] = useState("");
-  const dispatch = useDispatch();
-  const createdAt = new Date();
+  const dispatch = useDispatch<AppDispatch>();
 
   // handle todo submit
-  const handleSubmit = () => {
-    dispatch(
-      addTodo({ title: todo, createdAt: createdAt, status: filterValue }),
-    );
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (todo.trim() === "") return;
+    setShowModal(false);
+    const isCompleted = filterValue === "completed" ? true : false;
+    dispatch(postTodo({ title: todo, isCompleted }));
+    setTodo("");
   };
   return (
     <main
@@ -79,7 +82,7 @@ const Modal = ({ showModal, setShowModal }: Props) => {
               </button>
 
               <button
-                className="btn-outline text-lg"
+                className="btn btn-outline text-lg"
                 type="button"
                 onClick={() => setShowModal(false)}
               >

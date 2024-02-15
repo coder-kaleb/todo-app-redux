@@ -1,7 +1,6 @@
 import connectToMongoDB from "@/lib/connectToMongodb";
 import { Todos } from "@/models/model";
-import { FeedBack } from "@/types";
-import { NextApiRequest } from "next";
+import { Todo } from "@/types";
 import { NextResponse } from "next/server";
 
 export async function GET() {
@@ -9,10 +8,16 @@ export async function GET() {
   const todos = Todos.find();
   return NextResponse.json({ todos });
 }
-
-
-export async function POST(req: Request) {
-  const { status, title}: FeedBack = await req.json()
-  await connectToMongoDB();
+interface Type {
+  id: string;
   
+}
+export async function POST(req: Request) {
+  const { isCompleted, title }: Todo = await req.json();
+  await connectToMongoDB();
+  const todo = await Todos.create({
+    title,
+    isCompleted,
+  });
+  return NextResponse.json(todo);
 }

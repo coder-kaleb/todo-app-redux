@@ -18,11 +18,10 @@ export default function Home() {
 
   // sign in function
   const handleSignIn = async (e: MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
     setPending(true);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 4000));
-      // dispatch(login());
+      await signInWithPopup(auth, provider);
+      dispatch(login());
     } catch (error) {
       alert(error);
     } finally {

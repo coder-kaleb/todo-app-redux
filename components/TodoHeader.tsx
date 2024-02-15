@@ -7,7 +7,7 @@ const TodoHeader = ({ setShowModal }: Props) => {
   const [filterValue, setFilterValue] = useState("");
 
   return (
-    <div className="mx-auto flex max-w-3xl items-center justify-between bg-white px-5">
+    <div className="mx-auto mb-4 flex max-w-3xl items-center justify-between bg-white">
       <button className="btn btn-neutral" onClick={() => setShowModal(true)}>
         Add Task
       </button>
