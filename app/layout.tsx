@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} relative bg-white h-screen overflow-hidden`}>
+      <body className={`${inter.className} relative h-screen bg-white `}>
         <StoreProvider>{children}</StoreProvider>
       </body>
     </html>

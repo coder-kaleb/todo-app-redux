@@ -12,9 +12,9 @@ export default function Home() {
   const router = useRouter();
   const dispatch = useDispatch();
   const isSignedIn = useSelector((state: RootState) => state.auth.isSignedIn);
-  useEffect(() => {
-    if (isSignedIn) router.replace("/todo");
-  }, [router, isSignedIn]);
+  // useEffect(() => {
+  //   if (isSignedIn) router.replace("/todo");
+  // }, [router, isSignedIn]);
 
   // sign in function
   const handleSignIn = async (e: MouseEvent<HTMLButtonElement>) => {

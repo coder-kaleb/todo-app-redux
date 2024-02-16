@@ -3,14 +3,15 @@ export type FeedBack = {
   status: string;
 };
 
-export interface Todo {
+export interface TodoProps {
   title: string;
   isCompleted: boolean;
-  createdAt?: Date;
-  updatedAt?: Date;
-  id?: string
+  createdAt?: string;
+  updatedAt?: string;
+  _id: string;
 }
 
 export interface StateType {
-  todos: Todo[];
+  loading: boolean;
+  todos: TodoProps[];
 }
