@@ -1,4 +1,4 @@
-import { toggleIsCompleted } from "@/lib/features/todo/todoSlice";
+import { toggleTodoIsCompleted } from "@/lib/features/todo/todoSlice";
 import { AppDispatch, RootState } from "@/lib/store";
 import { TodoProps } from "@/types";
 import React, { useEffect, useState } from "react";
@@ -6,16 +6,23 @@ import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 
-const Todo = ({ title, createdAt, _id }: TodoProps) => {
+const Todo = ({ title, createdAt, _id, isCompleted }: TodoProps) => {
   const [check, setCheck] = useState(false);
-  const isCompelted = useSelector((state: RootState) => state.todos.todos);
-  console.log(isCompelted);
   const dispatch = useDispatch<AppDispatch>();
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const isChecked = e.target.checked;
     setCheck(e.target.checked);
-    dispatch(toggleIsCompleted(_id));
+    console.log(isChecked);
+    dispatch(toggleTodoIsCompleted({ id: _id, isCompleted: isChecked }));
   };
+  useEffect(() => {
+    setCheck(isCompleted);
+  }, [isCompleted]);
+  const formattedDate = new Date(`${createdAt}`)
+    .toLocaleString()
+    .split(",")
+    .reverse()
+    .join(", ");
 
   return (
     <li className="mb-2 flex justify-between bg-white px-3 py-3">
@@ -29,11 +36,12 @@ const Todo = ({ title, createdAt, _id }: TodoProps) => {
         <span className="bg-black transition-all peer-checked:h-1 peer-checked:w-1"></span>
         <div className="flex flex-col">
           <span
-            className={`${check ? "text-[#585858] opacity-90 before:w-full" : ""} relative font-medium transition before:absolute before:left-0 before:top-1/2 before:h-[2px] before:w-0 before:bg-[#585858] before:transition-all before:duration-500`}
+            data-content={title}
+            className={`${check ? "text-[#585858] opacity-90 before:w-full" : ""} relative w-fit font-medium transition before:absolute before:left-0 before:top-1/2 before:h-[2px] before:w-0 before:bg-[#585858] before:transition-all before:duration-500`}
           >
             {title}
           </span>
-          <span className="text-xs text-gray-500">9:32 PM, 02/15/2024</span>
+          <span className="text-xs text-gray-500">{formattedDate}</span>
         </div>
       </div>
       <div className="flex items-center gap-3">

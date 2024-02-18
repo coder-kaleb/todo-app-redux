@@ -18,7 +18,10 @@ const Modal = ({ showModal, setShowModal }: Props) => {
   // handle todo submit
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (todo.trim() === "") return;
+    if (todo.trim() === "") {
+      alert("Write your 📝Todo!");
+      return;
+    }
     setShowModal(false);
     const isCompleted = filterValue === "completed" ? true : false;
     dispatch(postTodo({ title: todo, isCompleted }));

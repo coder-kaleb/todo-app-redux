@@ -6,7 +6,7 @@ const initialState: StateType = {
   todos: [],
 };
 
-type PostProps = Omit<TodoProps, "id">;
+type PostProps = Omit<TodoProps, "_id">;
 export const postTodo = createAsyncThunk(
   "todo/postTodo",
   async (data: PostProps) => {
@@ -47,31 +47,47 @@ export const fetchAllTodos = createAsyncThunk(
   },
 );
 
+//  toggle todo isCompleted
+interface IToggelComplete {
+  id: string;
+  isCompleted: boolean;
+}
+export const toggleTodoIsCompleted = createAsyncThunk(
+  "todo/toggleTodoIsCompleted",
+  async (data: IToggelComplete) => {
+    const { id, isCompleted } = data;
+    try {
+      const res = await fetch(`http://localhost:3000/api/todo/${id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isCompleted }),
+      });
+      if (!res.ok) {
+        throw new Error(`API request failed with status ${res.status}`);
+      }
+      return res.json();
+    } catch (error) {
+      console.log("Error while updating todo", error);
+    }
+  },
+);
+
 const todoSlice = createSlice({
   name: "todo",
   initialState,
-  reducers: {
-    toggleIsCompleted: (state, action: PayloadAction<string>) => {
-      console.log(action.payload);
-      const index = state.todos.findIndex((todo) => (todo._id = action.payload));
-      if (index !== -1) {
-        state.todos[index].isCompleted = !state.todos[index].isCompleted;
-      } else {
-        console.log(`No Todo found for id : ${action.payload}`);
-      }
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(postTodo.pending, (state) => {
+        state.loading = true;
+      })
       .addCase(
         postTodo.fulfilled,
         (state, action: PayloadAction<TodoProps>) => {
           state.todos.unshift(action.payload);
+          state.loading = false;
         },
       )
-      .addCase(postTodo.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(fetchAllTodos.pending, (state) => {
         state.loading = true;
       })
@@ -81,8 +97,20 @@ const todoSlice = createSlice({
           state.todos = action.payload;
           state.loading = false;
         },
+      )
+      .addCase(
+        toggleTodoIsCompleted.fulfilled,
+        (state, action: PayloadAction<TodoProps>) => {
+          const { _id, isCompleted } = action.payload;
+          console.log("action.payload", action.payload);
+          const index = state.todos.findIndex((todo) => todo._id === _id);
+          if (index !== -1) {
+            state.todos[index].isCompleted = isCompleted;
+          } else {
+            console.log(`No Todo found for id : ${action.payload._id}`);
+          }
+        },
       );
   },
 });
-export const { toggleIsCompleted } = todoSlice.actions;
 export default todoSlice.reducer;
