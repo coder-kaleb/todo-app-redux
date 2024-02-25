@@ -15,3 +15,11 @@ export interface StateType {
   loading: boolean;
   todos: TodoProps[];
 }
+
+export type IModalProps = {
+  showModal: boolean;
+  setShowModal: (showModal: boolean) => void;
+  title?: string;
+  isCompleted?: boolean;
+  _id?: string;
+};

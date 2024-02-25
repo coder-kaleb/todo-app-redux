@@ -1,11 +1,6 @@
 import { StateType, TodoProps } from "@/types";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-const initialState: StateType = {
-  loading: false,
-  todos: [],
-};
-
 type PostProps = Omit<TodoProps, "_id">;
 export const postTodo = createAsyncThunk(
   "todo/postTodo",
@@ -57,10 +52,10 @@ export const toggleTodoIsCompleted = createAsyncThunk(
   async (data: IToggelComplete) => {
     const { id, isCompleted } = data;
     try {
-      const res = await fetch(`http://localhost:3000/api/todo/${id}`, {
+      const res = await fetch(`http://localhost:3000/api/todo/`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isCompleted }),
+        body: JSON.stringify({ isCompleted, id }),
       });
       if (!res.ok) {
         throw new Error(`API request failed with status ${res.status}`);
@@ -72,6 +67,50 @@ export const toggleTodoIsCompleted = createAsyncThunk(
   },
 );
 
+// update todo thunk
+// export const updateTodo = createAsyncThunk("todo/updateTodo", async (data: PostProps) => {
+//   const { title, isCompleted } = data;
+//   try {
+//     const res = await fetch(`http://localhost:3000/api/todo/${id}`, {
+//       method: "PATCH",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ title, isCompleted }),
+//     });
+//     if (!res.ok) {
+//       throw new Error(`API request failed with status ${res.status}`);
+//     }
+//     return res.json();
+//   } catch (error) {
+//     console.log("Error while updating todo", error);
+//   }
+// });
+
+export const updateTodo = createAsyncThunk(
+  "todo/updateTodo",
+  async (data: TodoProps) => {
+    const { title, isCompleted, _id } = data;
+    try {
+      const res = await fetch(`http://localhost:3000/api/todo/${_id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ title, isCompleted }),
+      });
+      if (!res.ok) {
+        throw new Error(
+          `API request failed to update with status code ${res.status}`,
+        );
+      }
+      return res.json();
+    } catch (error) {
+      console.log("Error while updating todo", error);
+    }
+  },
+);
+
+const initialState: StateType = {
+  loading: false,
+  todos: [],
+};
 const todoSlice = createSlice({
   name: "todo",
   initialState,
@@ -108,6 +147,23 @@ const todoSlice = createSlice({
             state.todos[index].isCompleted = isCompleted;
           } else {
             console.log(`No Todo found for id : ${action.payload._id}`);
+          }
+        },
+      )
+      .addCase(updateTodo.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(
+        updateTodo.fulfilled,
+        (state, action: PayloadAction<TodoProps>) => {
+          const { _id, title, isCompleted } = action.payload;
+          const index = state.todos.findIndex((todo) => todo._id === _id);
+          if (index !== -1) {
+            state.todos[index].title = title;
+            state.todos[index].isCompleted = isCompleted;
+          } else {
+            console.log(`No Todo found for id : ${_id}`);
+            state.loading = false;
           }
         },
       );

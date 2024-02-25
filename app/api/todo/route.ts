@@ -23,4 +23,20 @@ export async function POST(req: Request) {
   }
 }
 
-
+export async function PATCH(
+  req: Request,
+) {
+  try {
+    const { isCompleted, id } = await req.json();
+    await connectToMongoDB();
+    const updatedTodo = await Todos.findOne(
+      { _id: id },
+      // Return the updated document
+    );
+    updatedTodo.isCompleted = isCompleted;
+    await updatedTodo.save();
+    return NextResponse.json(updatedTodo);
+  } catch (error) {
+    console.error("Error updating todo:", error);
+  }
+}

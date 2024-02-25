@@ -1,14 +1,19 @@
-import { postTodo } from "@/lib/features/todo/todoSlice";
-import { AppDispatch } from "@/lib/store";
-import React, { useState } from "react";
+import { postTodo, updateTodo } from "@/lib/features/todo/todoSlice";
+import { AppDispatch, RootState } from "@/lib/store";
+import { IModalProps, TodoProps } from "@/types";
+import React, { useState, useEffect } from "react";
 import { CgClose } from "react-icons/cg";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
-type Props = {
-  showModal: boolean;
-  setShowModal: (showModal: boolean) => void;
-};
-const Modal = ({ showModal, setShowModal }: Props) => {
+const Modal = ({
+  type,
+  openModal,
+  setOpenModal,
+}: {
+  type: string;
+  openModal: boolean;
+  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const [filterValue, setFilterValue] = useState<"incompleted" | "completed">(
     "incompleted",
   );
@@ -18,23 +23,25 @@ const Modal = ({ showModal, setShowModal }: Props) => {
   // handle todo submit
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (todo.trim() === "") {
       alert("Write your 📝Todo!");
       return;
     }
-    setShowModal(false);
     const isCompleted = filterValue === "completed" ? true : false;
     dispatch(postTodo({ title: todo, isCompleted }));
     setTodo("");
+    setOpenModal(false);
   };
+
   return (
-    <main
-      className={`${showModal ? "flex" : "hidden"} fixed inset-0 z-[999]  h-screen  w-full bg-semi-transparent`}
+    <section
+      className={`${openModal ? "flex" : "hidden"} fixed inset-0 z-[999]  h-screen  w-full bg-semi-transparent`}
     >
       <div className="mx-auto mt-7 flex w-full max-w-lg flex-col justify-center gap-2 px-4 ">
         <div
           className="group ml-auto flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg bg-white transition duration-300 hover:bg-black"
-          onClick={() => setShowModal(false)}
+          onClick={() => setOpenModal(false)}
         >
           <CgClose className="h-6 w-6 text-black transition duration-300 group-hover:text-white" />
         </div>
@@ -81,13 +88,13 @@ const Modal = ({ showModal, setShowModal }: Props) => {
 
             <div className="flex gap-3">
               <button className="btn btn-neutral text-lg" type="submit">
-                Add
+                {type ? "Update" : "Add"}
               </button>
 
               <button
                 className="btn btn-outline text-lg"
                 type="button"
-                onClick={() => setShowModal(false)}
+                onClick={() => setOpenModal(false)}
               >
                 Cancle
               </button>
@@ -95,7 +102,7 @@ const Modal = ({ showModal, setShowModal }: Props) => {
           </form>
         </div>
       </div>
-    </main>
+    </section>
   );
 };
 

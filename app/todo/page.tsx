@@ -24,8 +24,8 @@ const Todo = () => {
   return (
     <main className="mx-auto max-w-7xl bg-white pt-6">
       <h1 className="mb-6 text-center text-4xl font-extrabold">TODO LIST</h1>
-      <TodoHeader setShowModal={setShowModal} />
-      <Modal showModal={showModal} setShowModal={setShowModal} />
+      <TodoHeader />
+      
       <section className="mx-auto max-w-3xl rounded-lg bg-[#ECEDF6] ">
         {isLoading ? (
           <div className="mx-auto text-center">
