@@ -12,7 +12,6 @@ const Todo = () => {
   const router = useRouter();
   const todos = useSelector((state: RootState) => state.todos.todos);
   const isLoading = useSelector((state: RootState) => state.todos.loading);
-  const [showModal, setShowModal] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   console.log(todos);
   // redirect user to signin if not signed in
@@ -25,7 +24,7 @@ const Todo = () => {
     <main className="mx-auto max-w-7xl bg-white pt-6">
       <h1 className="mb-6 text-center text-4xl font-extrabold">TODO LIST</h1>
       <TodoHeader />
-      
+
       <section className="mx-auto max-w-3xl rounded-lg bg-[#ECEDF6] ">
         {isLoading ? (
           <div className="mx-auto text-center">

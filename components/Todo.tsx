@@ -63,7 +63,14 @@ const Todo = ({ title, createdAt, _id, isCompleted }: TodoProps) => {
           </div>
         </div>
       </li>
-      <Modal type="add" openModal={updateModal} setOpenModal={setUpdateModal} />
+      <Modal
+        type="update"
+        openModal={updateModal}
+        setOpenModal={setUpdateModal}
+        title={title}
+        isCompleted={isCompleted}
+        id={_id}
+      />
     </>
   );
 };

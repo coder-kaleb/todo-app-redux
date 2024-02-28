@@ -91,7 +91,7 @@ export const updateTodo = createAsyncThunk(
     const { title, isCompleted, _id } = data;
     try {
       const res = await fetch(`http://localhost:3000/api/todo/${_id}`, {
-        method: "PATCH",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, isCompleted }),
       });
@@ -156,15 +156,15 @@ const todoSlice = createSlice({
       .addCase(
         updateTodo.fulfilled,
         (state, action: PayloadAction<TodoProps>) => {
-          const { _id, title, isCompleted } = action.payload;
-          const index = state.todos.findIndex((todo) => todo._id === _id);
-          if (index !== -1) {
-            state.todos[index].title = title;
-            state.todos[index].isCompleted = isCompleted;
-          } else {
-            console.log(`No Todo found for id : ${_id}`);
-            state.loading = false;
-          }
+          // const { _id, title, isCompleted } = action.payload;
+          // const index = state.todos.findIndex((todo) => todo._id === _id);
+          // if (index !== -1) {
+          // state.todos[index].title = title;
+          // state.todos[index].isCompleted = isCompleted;
+          // } else {
+          // console.log(`No Todo found for id : ${_id}`);
+          state.loading = false;
+          // }
         },
       );
   },

@@ -9,10 +9,16 @@ const Modal = ({
   type,
   openModal,
   setOpenModal,
+  title,
+  isCompleted,
+  id,
 }: {
   type: string;
   openModal: boolean;
   setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  title?: string;
+  isCompleted?: boolean;
+  id?: string;
 }) => {
   const [filterValue, setFilterValue] = useState<"incompleted" | "completed">(
     "incompleted",
@@ -20,10 +26,30 @@ const Modal = ({
   const [todo, setTodo] = useState("");
   const dispatch = useDispatch<AppDispatch>();
 
+  useEffect(() => {
+    setTodo(title ?? "");
+
+    const isDone = isCompleted === true ? "completed" : "incompleted";
+    setFilterValue(isDone);
+  }, [title, isCompleted]);
+
   // handle todo submit
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    if (type === "update") {
+      if (todo.trim() === "") {
+        alert("Write your 📝Todo!");
+        return;
+      }
+      dispatch(
+        updateTodo({
+          title: todo,
+          isCompleted: filterValue === "completed" ? true : false,
+          _id: id ?? "",
+        }),
+      );
+      setOpenModal(false);
+    }
     if (todo.trim() === "") {
       alert("Write your 📝Todo!");
       return;
@@ -88,7 +114,7 @@ const Modal = ({
 
             <div className="flex gap-3">
               <button className="btn btn-neutral text-lg" type="submit">
-                {type ? "Update" : "Add"}
+                {type === "update" ? "Update" : "Add"}
               </button>
 
               <button
