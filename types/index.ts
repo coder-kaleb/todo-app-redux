@@ -8,9 +8,8 @@ export interface TodoProps {
   isCompleted: boolean;
   createdAt?: string;
   updatedAt?: string;
-  _id: string;
+  _id?: string;
 }
-
 export interface StateType {
   loading: boolean;
   todos: TodoProps[];
@@ -23,3 +22,5 @@ export type IModalProps = {
   isCompleted?: boolean;
   _id?: string;
 };
+
+export type TDelte = string;

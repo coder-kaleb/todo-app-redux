@@ -1,10 +1,9 @@
-import { StateType, TodoProps } from "@/types";
+import { StateType, TDelte, TodoProps } from "@/types";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-type PostProps = Omit<TodoProps, "_id">;
 export const postTodo = createAsyncThunk(
   "todo/postTodo",
-  async (data: PostProps) => {
+  async (data: TodoProps) => {
     const { title, isCompleted } = data;
     try {
       const res = await fetch("http://localhost:3000/api/todo", {
@@ -67,30 +66,12 @@ export const toggleTodoIsCompleted = createAsyncThunk(
   },
 );
 
-// update todo thunk
-// export const updateTodo = createAsyncThunk("todo/updateTodo", async (data: PostProps) => {
-//   const { title, isCompleted } = data;
-//   try {
-//     const res = await fetch(`http://localhost:3000/api/todo/${id}`, {
-//       method: "PATCH",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify({ title, isCompleted }),
-//     });
-//     if (!res.ok) {
-//       throw new Error(`API request failed with status ${res.status}`);
-//     }
-//     return res.json();
-//   } catch (error) {
-//     console.log("Error while updating todo", error);
-//   }
-// });
-
 export const updateTodo = createAsyncThunk(
   "todo/updateTodo",
   async (data: TodoProps) => {
-    const { title, isCompleted, _id } = data;
+    const { title, isCompleted, _id: id } = data;
     try {
-      const res = await fetch(`http://localhost:3000/api/todo/${_id}`, {
+      const res = await fetch(`http://localhost:3000/api/todo/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, isCompleted }),
@@ -114,17 +95,37 @@ const initialState: StateType = {
 const todoSlice = createSlice({
   name: "todo",
   initialState,
-  reducers: {},
+  reducers: {
+    addTodo: (state, action: PayloadAction<TodoProps>) => {
+      state.todos.unshift(action.payload);
+    },
+    updateLocalTodo: (state, action: PayloadAction<TodoProps>) => {
+      const { _id, title, isCompleted } = action.payload;
+      const index = state.todos.findIndex((todo) => todo._id === _id);
+      if (index !== -1) {
+        state.todos[index].title = title;
+        state.todos[index].isCompleted = isCompleted;
+      } else {
+        alert(`No Todo found for a given id`);
+      }
+    },
+    deleteLocalTodo: (state, action: PayloadAction<TDelte>) => {
+      const index = state.todos.findIndex(
+        (todo) => todo._id === action.payload,
+      );
+      if (index !== -1) {
+        state.todos.splice(index, 1);
+      } else {
+        alert(`No Todo found for given id`);
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
-      .addCase(postTodo.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(
         postTodo.fulfilled,
         (state, action: PayloadAction<TodoProps>) => {
           state.todos.unshift(action.payload);
-          state.loading = false;
         },
       )
       .addCase(fetchAllTodos.pending, (state) => {
@@ -141,7 +142,6 @@ const todoSlice = createSlice({
         toggleTodoIsCompleted.fulfilled,
         (state, action: PayloadAction<TodoProps>) => {
           const { _id, isCompleted } = action.payload;
-          console.log("action.payload", action.payload);
           const index = state.todos.findIndex((todo) => todo._id === _id);
           if (index !== -1) {
             state.todos[index].isCompleted = isCompleted;
@@ -150,23 +150,21 @@ const todoSlice = createSlice({
           }
         },
       )
-      .addCase(updateTodo.pending, (state) => {
-        state.loading = true;
-      })
       .addCase(
         updateTodo.fulfilled,
         (state, action: PayloadAction<TodoProps>) => {
-          // const { _id, title, isCompleted } = action.payload;
-          // const index = state.todos.findIndex((todo) => todo._id === _id);
-          // if (index !== -1) {
-          // state.todos[index].title = title;
-          // state.todos[index].isCompleted = isCompleted;
-          // } else {
-          // console.log(`No Todo found for id : ${_id}`);
-          state.loading = false;
-          // }
+          const { _id, title, isCompleted } = action.payload;
+          const index = state.todos.findIndex((todo) => todo._id === _id);
+          if (index !== -1) {
+            state.todos[index].title = title;
+            state.todos[index].isCompleted = isCompleted;
+          } else {
+            console.log(`No Todo found for id : ${_id}`);
+            state.loading = false;
+          }
         },
       );
   },
 });
+export const { deleteLocalTodo, updateLocalTodo, addTodo } = todoSlice.actions;
 export default todoSlice.reducer;

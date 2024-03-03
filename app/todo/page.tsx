@@ -8,7 +8,9 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import TodoLists from "@/components/TodoLists";
 import { fetchAllTodos } from "@/lib/features/todo/todoSlice";
+import { TodoProps } from "@/types";
 const Todo = () => {
+  const [filterValue, setFilterValue] = useState("");
   const router = useRouter();
   const todos = useSelector((state: RootState) => state.todos.todos);
   const isLoading = useSelector((state: RootState) => state.todos.loading);
@@ -23,8 +25,7 @@ const Todo = () => {
   return (
     <main className="mx-auto max-w-7xl bg-white pt-6">
       <h1 className="mb-6 text-center text-4xl font-extrabold">TODO LIST</h1>
-      <TodoHeader />
-
+      <TodoHeader filterValue={filterValue} setFilterValue={setFilterValue} />
       <section className="mx-auto max-w-3xl rounded-lg bg-[#ECEDF6] ">
         {isLoading ? (
           <div className="mx-auto text-center">

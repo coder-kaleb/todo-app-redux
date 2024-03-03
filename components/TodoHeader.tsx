@@ -1,10 +1,11 @@
-import { AppDispatch } from "@/lib/store";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import Modal from "./Modal";
 
-const TodoHeader = () => {
-  const [filterValue, setFilterValue] = useState("");
+interface IHeader {
+  filterValue: string;
+  setFilterValue: React.Dispatch<React.SetStateAction<string>>;
+}
+const TodoHeader = ({ filterValue, setFilterValue }: IHeader) => {
   const [openModal, setOpenModal] = useState(false);
   return (
     <>

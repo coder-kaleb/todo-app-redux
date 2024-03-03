@@ -1,9 +1,14 @@
-import { postTodo, updateTodo } from "@/lib/features/todo/todoSlice";
-import { AppDispatch, RootState } from "@/lib/store";
-import { IModalProps, TodoProps } from "@/types";
-import React, { useState, useEffect } from "react";
+import {
+  addTodo,
+  postTodo,
+  updateLocalTodo,
+  updateTodo,
+} from "@/lib/features/todo/todoSlice";
+import { AppDispatch } from "@/lib/store";
+import { useRouter } from "next/navigation";
+import React, { useState, useEffect, useRef } from "react";
 import { CgClose } from "react-icons/cg";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const Modal = ({
   type,
@@ -25,13 +30,17 @@ const Modal = ({
   );
   const [todo, setTodo] = useState("");
   const dispatch = useDispatch<AppDispatch>();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setTodo(title ?? "");
 
     const isDone = isCompleted === true ? "completed" : "incompleted";
     setFilterValue(isDone);
-  }, [title, isCompleted]);
+    if (openModal) {
+      inputRef.current?.focus();
+    }
+  }, [title, isCompleted, openModal]);
 
   // handle todo submit
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -42,6 +51,13 @@ const Modal = ({
         return;
       }
       dispatch(
+        updateLocalTodo({
+          _id: id ?? "",
+          title: todo,
+          isCompleted: filterValue === "completed" ? true : false,
+        }),
+      );
+      dispatch(
         updateTodo({
           title: todo,
           isCompleted: filterValue === "completed" ? true : false,
@@ -49,12 +65,14 @@ const Modal = ({
         }),
       );
       setOpenModal(false);
+      return;
     }
     if (todo.trim() === "") {
       alert("Write your 📝Todo!");
       return;
     }
     const isCompleted = filterValue === "completed" ? true : false;
+    // dispatch(addTodo({ title: todo, isCompleted }));
     dispatch(postTodo({ title: todo, isCompleted }));
     setTodo("");
     setOpenModal(false);
@@ -85,6 +103,7 @@ const Modal = ({
               value={todo}
               placeholder="Type here..."
               onChange={(e) => setTodo(e.target.value)}
+              ref={inputRef}
               required
               className="mb-4 flex-1 bg-white px-2 py-2 text-xl outline-none"
             />

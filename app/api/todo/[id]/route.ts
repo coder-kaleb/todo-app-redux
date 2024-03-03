@@ -1,7 +1,6 @@
 import connectToMongoDB from "@/lib/connectToMongodb";
 import { Todos } from "@/models/model";
-import { TodoProps } from "@/types";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function GET(
   req: NextResponse,
@@ -30,5 +29,19 @@ export async function PUT(
     return NextResponse.json(todo);
   } catch (error) {
     console.log("Error while update todo:", error);
+  }
+}
+
+// write delete todo http handler  here
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } },
+) {
+  try {
+    await connectToMongoDB();
+    await Todos.findOneAndDelete({ _id: params.id });
+    return NextResponse.json("Deleted the todo successfully");
+  } catch (error) {
+    console.log("Error while deleting todo", error);
   }
 }

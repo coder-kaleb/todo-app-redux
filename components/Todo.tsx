@@ -1,12 +1,15 @@
-import { toggleTodoIsCompleted } from "@/lib/features/todo/todoSlice";
+import {
+  deleteLocalTodo,
+  toggleTodoIsCompleted,
+} from "@/lib/features/todo/todoSlice";
 import { AppDispatch } from "@/lib/store";
 import { TodoProps } from "@/types";
-import { fetchSingleTodo } from "@/utils";
 import React, { useEffect, useState } from "react";
 import { IoPencil } from "react-icons/io5";
 import { MdDelete } from "react-icons/md";
 import { useDispatch } from "react-redux";
 import Modal from "./Modal";
+import { deleteTodo } from "@/utils";
 
 const Todo = ({ title, createdAt, _id, isCompleted }: TodoProps) => {
   const [updateModal, setUpdateModal] = useState(false);
@@ -16,7 +19,7 @@ const Todo = ({ title, createdAt, _id, isCompleted }: TodoProps) => {
     const isChecked = e.target.checked;
     setCheck(e.target.checked);
     console.log(isChecked);
-    dispatch(toggleTodoIsCompleted({ id: _id, isCompleted: isChecked }));
+    dispatch(toggleTodoIsCompleted({ id: _id ?? "", isCompleted: isChecked }));
   };
   useEffect(() => {
     setCheck(isCompleted);
@@ -29,6 +32,10 @@ const Todo = ({ title, createdAt, _id, isCompleted }: TodoProps) => {
 
   const handleUpdate = () => {
     setUpdateModal(true);
+  };
+  const handleDelete = () => {
+    dispatch(deleteLocalTodo(_id ?? ""));
+    deleteTodo(_id ?? "");
   };
   return (
     <>
@@ -52,7 +59,10 @@ const Todo = ({ title, createdAt, _id, isCompleted }: TodoProps) => {
           </div>
         </div>
         <div className="flex items-center gap-3">
-          <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-[#DEDFE1] transition hover:bg-[#CCCDDE]">
+          <div
+            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-lg bg-[#DEDFE1] transition hover:bg-[#CCCDDE]"
+            onClick={handleDelete}
+          >
             <MdDelete className="h-5 w-5" />
           </div>
           <div
