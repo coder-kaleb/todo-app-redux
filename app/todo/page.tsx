@@ -11,16 +11,34 @@ import { fetchAllTodos } from "@/lib/features/todo/todoSlice";
 import { TodoProps } from "@/types";
 const Todo = () => {
   const [filterValue, setFilterValue] = useState("");
+  const [filterTodos, setFilterTodos] = useState<TodoProps[]>([]);
+  const allTodos = useSelector((state: RootState) => state.todos.todos);
+
   const router = useRouter();
-  const todos = useSelector((state: RootState) => state.todos.todos);
   const isLoading = useSelector((state: RootState) => state.todos.loading);
   const dispatch = useDispatch<AppDispatch>();
-  console.log(todos);
+  console.log(filterValue);
+  console.log(filterTodos);
+
   // redirect user to signin if not signed in
   useEffect(() => {
     // if (!isSingedIn) router.replace("/");
     dispatch(fetchAllTodos());
   }, [dispatch]);
+
+  useEffect(() => {
+    switch (filterValue) {
+      case "completed":
+        setFilterTodos(allTodos.filter((todo) => todo.isCompleted));
+        break;
+      case "incompleted":
+        setFilterTodos(allTodos.filter((todo) => !todo.isCompleted));
+        break;
+      default:
+        setFilterTodos(allTodos);
+        break;
+    }
+  }, [filterValue, allTodos]);
 
   return (
     <main className="mx-auto max-w-7xl bg-white pt-6">
@@ -31,10 +49,10 @@ const Todo = () => {
           <div className="mx-auto text-center">
             <span className="loading loading-ring loading-lg"></span>
           </div>
-        ) : todos.length === 0 ? (
+        ) : allTodos.length === 0 ? (
           <h2 className="p-2 text-center">Create your todo</h2>
         ) : (
-          <TodoLists todos={todos} />
+          <TodoLists todos={filterTodos} />
         )}
       </section>
     </main>

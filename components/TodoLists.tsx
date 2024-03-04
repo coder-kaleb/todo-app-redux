@@ -10,7 +10,7 @@ const TodoLists = ({ todos }: Props) => {
         <Todo
           isCompleted={todo.isCompleted}
           title={todo.title}
-          createdAt={todo.createdAt}
+          createdAt={todo.updatedAt}
           key={todo._id}
           _id={todo._id}
         />

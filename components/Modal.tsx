@@ -132,12 +132,12 @@ const Modal = ({
             </select>
 
             <div className="flex gap-3">
-              <button className="btn btn-neutral text-lg" type="submit">
+              <button className="btn btn-neutral" type="submit">
                 {type === "update" ? "Update" : "Add"}
               </button>
 
               <button
-                className="btn btn-outline text-lg"
+                className="btn btn-outline"
                 type="button"
                 onClick={() => setOpenModal(false)}
               >
