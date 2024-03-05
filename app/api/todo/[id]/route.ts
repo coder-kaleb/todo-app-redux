@@ -3,7 +3,7 @@ import { Todos } from "@/models/model";
 import { NextResponse } from "next/server";
 
 export async function GET(
-  req: NextResponse,
+  req: Request,
   { params }: { params: { id: string } },
 ) {
   try {
