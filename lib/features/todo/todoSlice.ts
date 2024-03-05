@@ -6,7 +6,7 @@ export const postTodo = createAsyncThunk(
   async (data: TodoProps) => {
     const { title, isCompleted } = data;
     try {
-      const res = await fetch("http://localhost:3000/api/todo", {
+      const res = await fetch("https://sereneschedule.vercel.app/api/todo", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, isCompleted }),
@@ -26,7 +26,7 @@ export const fetchAllTodos = createAsyncThunk(
   "todo/fetchAllTodos",
   async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/todo", {
+      const res = await fetch("https://sereneschedule.vercel.app/api/todo", {
         cache: "no-store",
       });
       if (!res.ok) {
@@ -51,7 +51,7 @@ export const toggleTodoIsCompleted = createAsyncThunk(
   async (data: IToggelComplete) => {
     const { id, isCompleted } = data;
     try {
-      const res = await fetch(`http://localhost:3000/api/todo/`, {
+      const res = await fetch(`https://sereneschedule.vercel.app/api/todo/`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isCompleted, id }),
@@ -71,11 +71,14 @@ export const updateTodo = createAsyncThunk(
   async (data: TodoProps) => {
     const { title, isCompleted, _id: id } = data;
     try {
-      const res = await fetch(`http://localhost:3000/api/todo/${id}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, isCompleted }),
-      });
+      const res = await fetch(
+        `https://sereneschedule.vercel.app/api/todo/${id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ title, isCompleted }),
+        },
+      );
       if (!res.ok) {
         throw new Error(
           `API request failed to update with status code ${res.status}`,
