@@ -22,7 +22,7 @@ const Todo = () => {
   useEffect(() => {
     if (!isSingedIn) router.replace("/");
     dispatch(fetchAllTodos());
-  }, [dispatch]);
+  }, [dispatch, isSingedIn, router]);
 
   useEffect(() => {
     switch (filterValue) {
