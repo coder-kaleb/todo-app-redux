@@ -5,7 +5,7 @@ import { StateType } from "@/types";
 type Props = Omit<StateType, "loading" | "isOpen">;
 const TodoLists = ({ todos }: Props) => {
   return (
-    <ul className=" w-full p-5">
+    <ul className=" w-full p-3 sm:p-5">
       {todos.map((todo) => (
         <Todo
           isCompleted={todo.isCompleted}
