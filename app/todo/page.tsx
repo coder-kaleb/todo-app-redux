@@ -39,7 +39,7 @@ const Todo = () => {
   }, [filterValue, allTodos]);
 
   return (
-    <main className="mx-auto max-w-7xl bg-white pt-6">
+    <main className="mx-auto max-w-7xl bg-white px-4 pt-6">
       <h1 className="mb-6 text-center text-4xl font-extrabold">TODO LIST</h1>
       <TodoHeader filterValue={filterValue} setFilterValue={setFilterValue} />
       <section className="mx-auto max-w-3xl rounded-lg bg-[#ECEDF6] ">
