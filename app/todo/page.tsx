@@ -13,16 +13,14 @@ const Todo = () => {
   const [filterValue, setFilterValue] = useState("");
   const [filterTodos, setFilterTodos] = useState<TodoProps[]>([]);
   const allTodos = useSelector((state: RootState) => state.todos.todos);
-
+  const isSingedIn = useSelector((state: RootState) => state.auth.isSignedIn);
   const router = useRouter();
   const isLoading = useSelector((state: RootState) => state.todos.loading);
   const dispatch = useDispatch<AppDispatch>();
-  console.log(filterValue);
-  console.log(filterTodos);
 
   // redirect user to signin if not signed in
   useEffect(() => {
-    // if (!isSingedIn) router.replace("/");
+    if (!isSingedIn) router.replace("/");
     dispatch(fetchAllTodos());
   }, [dispatch]);
 

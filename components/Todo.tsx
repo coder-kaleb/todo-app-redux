@@ -18,7 +18,6 @@ const Todo = ({ title, createdAt, _id, isCompleted }: TodoProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const isChecked = e.target.checked;
     setCheck(e.target.checked);
-    console.log(isChecked);
     dispatch(toggleTodoIsCompleted({ id: _id ?? "", isCompleted: isChecked }));
   };
   useEffect(() => {
